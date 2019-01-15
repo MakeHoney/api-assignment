@@ -14,7 +14,7 @@ export default {
   queryChecker (req, res, next) {
     const tokenRequested = req.headers['x-access-token'] || req.query.token
     if (tokenRequested) {
-      req.validToken = tokenRequested
+      req.validQuery = tokenRequested
       next()
     } else {
       return res.status(404).json({

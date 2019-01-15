@@ -16,12 +16,12 @@ export default {
   },
   async decodeToken (req, res) {
     try {
-      const { session, validToken } = req
-      const decoded = await token.verify(validToken)
+      const { session, validQuery } = req
+      const decoded = await token.verify(validQuery)
 
       // without any exception...
       // check session existence
-      if(session[validToken]) {
+      if(session[validQuery]) {
         res.json({ decoded })
       } else {
         res.status(500).json({
@@ -36,12 +36,12 @@ export default {
   },
   async removeSessionData (req, res) {
     try {
-      const { session, validToken } = req
-      await token.verify(validToken)
+      const { session, validQuery } = req
+      await token.verify(validQuery)
 
       // without any exception...
-      if (session[validToken]) {
-        delete session[validToken]
+      if (session[validQuery]) {
+        delete session[validQuery]
         res.json({ message: 'successfully removed' })
       } else {
         res.status(500).json({
