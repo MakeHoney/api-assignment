@@ -6,7 +6,9 @@ export default {
       req.payload = body
       next()
     } else {
-      return res.status(404).send('not found')
+      return res.status(404).json({
+        message: 'User information body is requested!'
+      })
     }
   },
   queryChecker (req, res, next) {
@@ -15,7 +17,9 @@ export default {
       req.validToken = tokenRequested
       next()
     } else {
-      return res.status(404).send('not found')
+      return res.status(404).json({
+        message: 'Token does not exist!'
+      })
     }
   }
 }
