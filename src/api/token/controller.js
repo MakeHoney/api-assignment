@@ -3,8 +3,8 @@ import { token } from '../../utils'
 export default {
   async makeToken (req, res) {
     try {
-      const { session, body } = req
-      const newToken = await token.create(body)
+      const { session, payload } = req
+      const newToken = await token.create(payload)
 
       session[newToken] = true
 
@@ -17,14 +17,13 @@ export default {
   },
   async decodeToken (req, res) {
     try {
-      const tokenRequested = req.headers['x-access-token'] || req.query.token
-      const { session } = req
-      const decoded = await token.verify(tokenRequested)
+      const { session, validToken } = req
+      const decoded = await token.verify(validToken)
 
       // without any exception...
 
       // check session existence
-      if(session[tokenRequested]) {
+      if(session[validToken]) {
         res.json({ decoded })
       } else {
         res.json({ message: "session doesn't exist!" })
@@ -37,13 +36,12 @@ export default {
   },
   async removeSessionData (req, res) {
     try {
-      const tokenRequested = req.headers['x-access-token'] || req.query.token
-      const { session } = req
+      const { session, validToken } = req
 
-      await token.verify(tokenRequested)
+      await token.verify(validToken)
 
       // without any exception...
-      session[tokenRequested] = false
+      delete session[validToken]
 
       res.send({ message: 'successfully removed' })
     } catch (err) {
