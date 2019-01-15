@@ -5,7 +5,6 @@ export default {
     try {
       const { session, payload } = req
       const newToken = await token.create(payload)
-
       session[newToken] = true
 
       res.status(200).json({ newToken })
@@ -21,12 +20,13 @@ export default {
       const decoded = await token.verify(validToken)
 
       // without any exception...
-
       // check session existence
       if(session[validToken]) {
         res.json({ decoded })
       } else {
-        res.json({ message: "session doesn't exist!" })
+        res.status(500).json({
+          message: 'session does not exist!'
+        })
       }
     } catch (err) {
       res.status(500).json({
@@ -37,13 +37,17 @@ export default {
   async removeSessionData (req, res) {
     try {
       const { session, validToken } = req
-
       await token.verify(validToken)
 
       // without any exception...
-      delete session[validToken]
-
-      res.send({ message: 'successfully removed' })
+      if (session[validToken]) {
+        delete session[validToken]
+        res.json({ message: 'successfully removed' })
+      } else {
+        res.status(500).json({
+          message: 'no session to delete'
+        })
+      }
     } catch (err) {
       res.status(500).json({
         message: err.message
