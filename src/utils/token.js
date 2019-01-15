@@ -2,8 +2,8 @@ import jwt from 'jsonwebtoken'
 import constants from '../constants'
 
 export default {
-  create (body) {
-    return jwt.sign(body, constants.token_key, {
+  create (payload) {
+    return jwt.sign(payload, constants.token_key, {
       subject: 'user-information',
       expiresIn: '1d'
     })
