@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import session from 'express-session'
 import constants from '../../constants'
+import controller from './controller'
 
 const router = Router()
 
@@ -10,8 +11,8 @@ router.use(session({
   saveUninitialized: true
 }))
 
-router.post('/encode')
-router.get('/decode')
-router.delete('/destroy')
+router.post('/encode', controller.makeToken)
+router.get('/decode', controller.decodeToken)
+router.delete('/destroy', controller.removeSessionData)
 
 export default router
